@@ -1,0 +1,27 @@
+on:
+  # Trigger analysis when pushing in master or pull requests, and when creating
+  # a pull request. 
+  push:
+    branches:
+      - master
+  pull_request:
+      types: [opened, synchronize, reopened]
+
+name: Main Workflow
+jobs:
+  sonarqube:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    - run: npm install
+    - name: SonarQube Scan
+      uses: sonarsource/sonarqube-scan-action@master
+      env:
+        SONAR_TOKEN: 67f7f394bb88943a1a77835de484bf754a13d9b2
+        SONAR_HOST_URL: https://cqc.cloud.sysco.com/
